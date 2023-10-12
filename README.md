@@ -19,7 +19,7 @@ Untuk memulai proyek ini, ikuti langkah-langkah berikut:
 2. Pindah ke direktori proyek:
    ```
    cd Atomy_Automation
-   ``
+   ```
 3. Pastikan Anda menempatkan data login dan registrasi Anda di direktori data sebagai login_data.xlsx dan registration_data.xlsx masing-masing.
 4. Jalankan skrip utama untuk memulai otomatisasi:
    ```
