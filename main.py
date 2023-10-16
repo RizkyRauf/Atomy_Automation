@@ -8,9 +8,12 @@ def main():
     login_data = pd.read_excel('data/login_data.xlsx')
     registration_data = pd.read_excel('data/registration_data.xlsx')
 
-    for l in range(len(login_data)):
-        print(f"l: {l}")
-        Id_Atomy = int(login_data['ID ATOMY'][l])
+    l = 0  # Indeks data login saat ini
+    max_login_data_index = len(login_data) - 1
+    
+
+    while l <= max_login_data_index:
+        Id_Atomy = str(login_data['ID ATOMY'][l])
         Password_Atomy = str(login_data['PW ATOMY'][l])
         print(f"Id_Atomy: {Id_Atomy}, Password_Atomy: {Password_Atomy}")
 
@@ -36,24 +39,29 @@ def main():
                     )
                 
                 if data_register:
-                    print(f"Berhasil Mendaftarkan{Nama}")
+                    print(f"Berhasil Mendaftarkan {j+1} {Nama}")
                     driver.quit()
                     time.sleep(2)
 
-                    login_data = pd.read_excel('data/login_data.xlsx')
+                    # Setelah selesai dengan pendaftaran, periksa apakah ada data login baru
+                    updated_login_data = pd.read_excel('data/login_data.xlsx')
+                    if len(updated_login_data) > max_login_data_index:
+                        max_login_data_index = len(updated_login_data) - 1
 
-                    if 1 < len(login_data) > -1:
-                        print("Melakukan login dengan akun baru")
-                        Id_Atomy = str(login_data['ID ATOMY'][1])
-                        Password_Atomy = str(login_data['PW ATOMY'][1])
-                        login_instance = Login()
-                        
-                        driver = login_instance.login(Id_Atomy, Password_Atomy)
-                    
-                    else:
-                        print(f"Data {j+1} Gagal")
-                        driver.quit()
-        
+                    print("Melakukan login dengan akun yang baru...")
+                    l += 1
+
+                    # Login dengan akun baru
+                    Id_Atomy = str(updated_login_data['ID ATOMY'][l])
+                    Password_Atomy = str(updated_login_data['PW ATOMY'][l])
+                    driver = login_instance.login(Id_Atomy, Password_Atomy)
+
+
+                else:
+                    print(f"Data {j+1} Gadget")
+                    driver.quit()
+                    time.sleep(2)
+
         else:
             print(f"Login Gagal dengan ID Atomy {Id_Atomy}")
 
