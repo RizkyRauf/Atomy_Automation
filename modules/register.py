@@ -98,12 +98,37 @@ class Register:
     def fill_registration_form(self, driver, Nama, Telpon, Alamat, Password, Pas_Tamu, Tanggal_Lahir, Nik_KTP):
         self.fill_field(driver, '//*[@id="txtFirstName"]', Nama)
         self.fill_field(driver, '//*[@id="txtSocialNo"]', Nik_KTP)
-        self.fill_field(driver, '//*[@id="txtBirthDay"]', Tanggal_Lahir, Keys.ENTER)
+        self.fill_birthdate(driver, Tanggal_Lahir)
         self.fill_field(driver, '//*[@id="txtPwd"]', Password)
         self.fill_field(driver, '//*[@id="txtPwd2"]', Password)
         self.fill_field(driver, '//*[@id="txtGpwd"]', Pas_Tamu)
         self.fill_field(driver, '//*[@id="txtHandPhone"]', Telpon)
         self.fill_field(driver, '//*[@id="txtAddr2"]', Alamat)
+
+    def fill_birthdate(self, driver, Tanggal_Lahir):
+    # Pecah Tanggal_Lahir menjadi bagian-bagian yang diperlukan
+        tahun, bulan, tanggal = map(int, Tanggal_Lahir.split('-'))
+
+        # Klik tanggal lahir
+        tanggal_lahir_xpath = '//*[@id="txtBirthDay"]'
+        tanggal_lahir = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, tanggal_lahir_xpath)))
+        tanggal_lahir.click()
+
+        # Temukan elemen bulan dan klik untuk membuka pilihan bulan
+        elemen_bulan_xpath = f'//*[@id="ui-datepicker-div"]/div/div/select[@class="ui-datepicker-month"]/option[{bulan}]'
+        elemen_bulan = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, elemen_bulan_xpath)))
+        elemen_bulan.click()
+
+        # Temukan elemen tahun dan klik untuk membuka pilihan tahun
+        elemen_tahun_xpath = f'//*[@id="ui-datepicker-div"]/div/div/select[@class="ui-datepicker-year"]/option[text()="{tahun}"]'
+        elemen_tahun = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, elemen_tahun_xpath)))
+        elemen_tahun.click()
+
+        # Temukan dan klik elemen tanggal
+        elemen_tanggal_xpath = f'//*[@id="ui-datepicker-div"]/table/tbody/tr/td[@data-month="{bulan-1}"]/a[text()="{tanggal}"]'
+        elemen_tanggal = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, elemen_tanggal_xpath)))
+        elemen_tanggal.click()
+        time.sleep(2)
 
     def fill_field(self, driver, xpath, value, *args):
         element = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, xpath)))
